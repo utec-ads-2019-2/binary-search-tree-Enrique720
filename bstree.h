@@ -19,13 +19,13 @@ class BSTree {
         while (1 == 1) {
             if (position_id < temp->data.get_pos()) {
                 if (temp->left->data.get_pos() == position_id) {
-                    return temp->left;
+                    return true;
                 } else {
                     temp = temp->left;
                 }
             } else {
                if( temp->right->data.get_pos() == position_id ){
-                   return temp->right;
+                   return true;
                }
                else{
                    temp  = temp->right;
