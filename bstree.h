@@ -12,11 +12,60 @@ class BSTree {
         BSTree() : root(nullptr) {};
 
         bool find(T data) { 
-            // TODO
+           Node *temp = root;
+    if (position_id == temp->data.get_pos()) {
+        return temp;
+    } else {
+        while (1 == 1) {
+            if (position_id < temp->data.get_pos()) {
+                if (temp->left->data.get_pos() == position_id) {
+                    return temp->left;
+                } else {
+                    temp = temp->left;
+                }
+            } else {
+               if( temp->right->data.get_pos() == position_id ){
+                   return temp->right;
+               }
+               else{
+                   temp  = temp->right;
+               }
+            }
+            if( temp ->right == nullptr && temp->left == nullptr)
+                return false;
+        }
+    }
         } 
 
         bool insert(T data) {
-            // TODO
+             Node* nuevo = new Node(data);
+             Node* temp = root;
+             if(root != nullptr){
+                while ( 1 == 1 ){
+                if( nuevo->data.get_pos() <  temp->data.get_pos()){
+                //menor
+                   if(temp->left == nullptr){
+                    temp->left =  nuevo;
+                    break;
+                }
+                else{
+                    temp=temp->left;
+                }
+            }
+            else{
+                //Mayor
+                if(temp->right == nullptr){
+                    temp->right = nuevo;
+                    break;
+                }
+                else{
+                    temp = temp->right;
+                }
+            }
+        }
+    }
+    else{
+    root = nuevo;}
         }
 
         bool remove(T data) {
@@ -54,6 +103,7 @@ class BSTree {
         ~BSTree() {
             // TODO
         }
+    //Iterador inOrder
 };
 
 #endif
