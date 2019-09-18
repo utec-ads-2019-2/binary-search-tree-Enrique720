@@ -54,6 +54,7 @@ class BSTree {
             }
             else{
                 //Mayor
+                
                 if(temp->right == nullptr){
                     temp->right = nuevo;
                     break;
