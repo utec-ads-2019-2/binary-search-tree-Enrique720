@@ -17,7 +17,10 @@ class Node {
     friend class BSTree; 
 
     template<class>
-    friend class Iterator; 
+    friend class Iterator;
+
+public:
+    Node(T _data): data{_data}, left{nullptr}, right{nullptr} {}
 };
 
 #endif

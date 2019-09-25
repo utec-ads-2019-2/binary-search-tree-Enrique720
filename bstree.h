@@ -1,30 +1,54 @@
 #ifndef BSTREE_H
 #define BSTREE_H
 
-#include "node.h"
-#include "iterator.h"
 
-template <typename T> 
+
+#include "node.h"
+//#include "iterator.h"
+#include <iostream>
+using namespace std;
+template <typename T>
 class BSTree {
     Node<T> *root;
+    int nodes;
+    private:
+        int heigth(Node <T>  *it){
+            if (nullptr == it)
+                return 0;
+            int h_left = height(it->left);
+            int h_right = height(it->right);
+            return max(h_left, h_right) + 1;
+        }
+        void inOrder(Node <T> * it){
+            if (it != nullptr) {
+                inOrder(it->left);
+                cout<<it->data<<" ";
+                inOrder(it->right);
+            }
+        }
+        void preOrder(Node <T>* it){
 
+        }
+        void postOrder(Node <T> * it){
+            
+        }
     public:
-        BSTree() : root(nullptr) {};
+        BSTree() : root{nullptr}, nodes{0} {};
 
         bool find(T data) { 
-           Node *temp = root;
-    if (position_id == temp->data.get_pos()) {
+           auto *temp = root;
+        if (data == temp->data) {
         return temp;
-    } else {
-        while (1 == 1) {
-            if (position_id < temp->data.get_pos()) {
-                if (temp->left->data.get_pos() == position_id) {
+        } else {
+        while (true) {
+            if (data < temp->data) {
+                if (temp->left->data == data) {
                     return true;
                 } else {
                     temp = temp->left;
                 }
             } else {
-               if( temp->right->data.get_pos() == position_id ){
+               if( temp->right->data== data ){
                    return true;
                }
                else{
@@ -38,72 +62,73 @@ class BSTree {
         } 
 
         bool insert(T data) {
-             Node* nuevo = new Node(data);
-             Node* temp = root;
+             auto* nuevo = new Node<T>(data);
+             auto * temp = root;
              if(root != nullptr){
-                while ( 1 == 1 ){
-                if( nuevo->data.get_pos() <  temp->data.get_pos()){
-                //menor
+                while (true){
+                if( nuevo->data <  temp->data){
                    if(temp->left == nullptr){
                     temp->left =  nuevo;
-                    break;
+                    nodes++;
+                    return true;
                 }
                 else{
                     temp=temp->left;
                 }
             }
             else{
-                //Mayor
-                
                 if(temp->right == nullptr){
                     temp->right = nuevo;
-                    break;
+                    nodes++;
+                    return true;
                 }
                 else{
                     temp = temp->right;
+                    }
                 }
             }
         }
-    }
-    else{
-    root = nuevo;}
+            else{
+             root = nuevo;
+             nodes++;
+             return true;
+            }
         }
 
         bool remove(T data) {
-            // TODO
+
         }
 
         size_t size() {
-            // TODO
+            return nodes;
         }
 
         size_t height() {
-            // TODO
+            heigth(root);
         }
-
-        void traversePreOrder() {
-            // TODO
-        }
+    //   void traversePreOrder() {
+    //       // TODO
+    //   }
 
         void traverseInOrder() {
-            // TODO
+            inOrder(root);
         }
 
-        void traversePostOrder() {
-            // TODO
-        }
+  //     void traversePostOrder() {
+  //         // TODO
+  //     }
 
-        Iterator<T> begin() {
-            // TODO
-        }
+  //     Iterator<T> begin() {
+  //         // TODO
+  //     }
 
-        Iterator<T> end() { 
-            // TODO
-        }
+  //     Iterator<T> end() {
+  //         // TODO
+  //     }
 
-        ~BSTree() {
-            // TODO
-        }
+  //     ~BSTree() {
+  //         // TODO
+  //     }
     //Iterador inOrder
 };
 
