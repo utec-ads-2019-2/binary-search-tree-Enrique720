@@ -52,36 +52,6 @@ private:
         }
     }
 
-    Node<T> *find_node(T data) {
-        if (root != nullptr) {
-            auto *temp = root;
-
-            while (true) {
-                if (data < temp->data) {
-                    if (temp->left != nullptr && temp->left->data == data) {
-                        return temp;
-                    } else {
-                        temp = temp->left;
-                    }
-                } else {
-                    if (temp->right != nullptr && temp->right->data == data) {
-                        return temp;
-                    } else {
-                        temp = temp->right;
-                    }
-                }
-                if (temp->right == nullptr && temp->left == nullptr)
-                    return nullptr;
-            }
-        }
-    }
-
-    Node<T> *maximoIzquierda(Node<T> *it) {
-        while (it->right != nullptr) {
-            it = it->right;
-        }
-        return it;
-    }
 public:
     BSTree() : root{nullptr}, nodes{0} {};
 
