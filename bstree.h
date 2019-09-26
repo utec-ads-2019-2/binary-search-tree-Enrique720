@@ -4,52 +4,58 @@
 
 
 #include "node.h"
-//#include "iterator.h"
+#include "iterator.h"
 #include <iostream>
 using namespace std;
 template <typename T>
 class BSTree {
     Node<T> *root;
-    int nodes;
+    size_t nodes;
 private:
-    int heigth(Node <T>  *it){
+    int heigth(Node<T> *it) {
         if (nullptr == it)
             return 0;
         int h_left = height(it->left);
         int h_right = height(it->right);
         return max(h_left, h_right) + 1;
     }
-    void inOrder(Node <T> * it){
+
+    void inOrder(Node<T> *it) {
         if (it != nullptr) {
             inOrder(it->left);
-            cout<<it->data<<" ";
+            cout << it->data << " ";
             inOrder(it->right);
         }
     }
-    void preOrder(Node <T>* it){
+
+    void preOrder(Node<T> *it) {
         if (it != nullptr) {
-            cout<<it->data<<" ";
+            cout << it->data << " ";
             preOrder(it->left);
             preOrder(it->right);
         }
     }
-    void postOrder(Node <T> * it){
+
+    void postOrder(Node<T> *it) {
         if (it != nullptr) {
             postOrder(it->left);
             postOrder(it->right);
-            cout<<it->data<<" ";
+            cout << it->data << " ";
         }
     }
-    void destroy(Node <T>* it){
-        if(it!= nullptr){
+
+    void destroy(Node<T> *it) {
+        if (it != nullptr) {
             destroy(it->left);
             destroy(it->right);
             delete it;
         }
     }
-    Node <T>* find_node(T data){
-        if(root!= nullptr) {
+
+    Node<T> *find_node(T data) {
+        if (root != nullptr) {
             auto *temp = root;
+
             while (true) {
                 if (data < temp->data) {
                     if (temp->left != nullptr && temp->left->data == data) {
@@ -69,8 +75,9 @@ private:
             }
         }
     }
-    Node <T>* maximoIzquierda(Node<T>* it){
-        while(it->right != nullptr){
+
+    Node<T> *maximoIzquierda(Node<T> *it) {
+        while (it->right != nullptr) {
             it = it->right;
         }
         return it;
@@ -80,58 +87,60 @@ public:
 
     bool find(T data) {
         auto *temp = root;
-        if (data == temp->data) {
-            return temp;
+        if(root == nullptr){
+            return false;
+        }
+        else if (data == temp->data) {
+            return true;
         } else {
             while (true) {
                 if (data < temp->data) {
+                    if(temp->left == nullptr){
+                        return false;
+                    }
                     if (temp->left->data == data) {
                         return true;
                     } else {
                         temp = temp->left;
                     }
                 } else {
-                    if( temp->right->data== data ){
-                        return true;
-                    }
-                    else{
-                        temp  = temp->right;
-                    }
-                }
-                if( temp ->right == nullptr && temp->left == nullptr)
-                    return false;
-            }
-        }
-    }
-
-    bool insert(T data) {
-        auto* nuevo = new Node<T>(data);
-        auto * temp = root;
-        if(root != nullptr){
-            while (true){
-                if( nuevo->data <=  temp->data){
-                    if(temp->left == nullptr){
-                        temp->left =  nuevo;
-                        nodes++;
-                        return true;
-                    }
-                    else{
-                        temp=temp->left;
-                    }
-                }
-                else{
                     if(temp->right == nullptr){
-                        temp->right = nuevo;
-                        nodes++;
-                        return true;
+                        return false;
                     }
-                    else{
+                    if (temp->right->data == data) {
+                        return true;
+                    } else {
                         temp = temp->right;
                     }
                 }
             }
         }
-        else{
+    }
+
+    bool insert(T data) {
+        auto *nuevo = new Node<T>(data);
+        auto *temp = root;
+        if (root != nullptr) {
+            while (true) {
+                if (nuevo->data <= temp->data) {
+                    if (temp->left == nullptr) {
+                        temp->left = nuevo;
+                        nodes++;
+                        return true;
+                    } else {
+                        temp = temp->left;
+                    }
+                } else {
+                    if (temp->right == nullptr) {
+                        temp->right = nuevo;
+                        nodes++;
+                        return true;
+                    } else {
+                        temp = temp->right;
+                    }
+                }
+            }
+        } else {
             root = nuevo;
             nodes++;
             return true;
@@ -139,135 +148,100 @@ public:
     }
 
     bool remove(T data) {
-        if(find(data)){
-            if(nodes == 1){
-                delete root;
-                root = nullptr;
-                return true;
-            }
-            else if(root->data == data){
-                auto* nodo = maximoIzquierda(root->left);
-                auto *padre = find_node(nodo->data);
-                if(root->left != nodo){
-                    if(nodo->left != nullptr) {
-                     padre->right = nodo->left;
-                        swap(nodo->data,root->data);
-                        delete nodo;
-                        nodes--;
-                        return true;
-                    }
-                    else {
-                        swap(nodo->data, root->data);
-                        delete nodo;
-                        padre->right = nullptr;
-                        nodes--;
-                        return true;
-                    }
-                }
-                else{
-                    root->left = nodo->left;
-                    swap(root->data,nodo->data);
-                    delete nodo;
-                    nodes--;
-                    return true;
-                }
-
-            }
-            else{
-                auto* dad = find_node(data);
-                Node<T>* removed;
-                bool left_right;
-                if(dad-> data > data){
-                    removed = dad->left;
-                    left_right = true;
-                }
-                else{
-                    removed = dad->right;
-                    left_right = false;
-                }
-                if(removed->right == nullptr && removed->left == nullptr){
-                    delete removed;
-                    if(left_right){
-                        dad->left = nullptr;
-                    }
-                    else{
-                        dad->right = nullptr;
-                    }
-                    nodes--;
-                    return true;
-                } else if(removed->right == nullptr && removed->left != nullptr){
-                    if(left_right){
-                        dad->left = removed->left;
-                        delete removed;
-                        nodes--;
-                        return true;
-                    }
-                    else {
-                        dad->right = removed->left;
-                        delete removed;
-                        nodes--;
-                        return true;
-                    }
-                }
-                else if(removed->right != nullptr && removed->left == nullptr){
-                    if(left_right){
-                        dad->left = removed->right;
-                        delete removed;
-                        nodes--;
-                        return true;
-                    }
-                    else {
-                        dad->right = removed->right;
-                        delete removed;
-                        nodes--;
-                        return true;
-                    }
-                }
-                else{
-                    auto* nodo = maximoIzquierda(removed->left);
-                    auto* padre = find_node(nodo->data);
-                    if(removed->left == nodo){
-                        if(nodo->left != nullptr){
-                            removed->left = nodo->left;
-                            swap(nodo->data,removed->data);
-                            delete nodo;
-                            nodes--;
-                            return true;
-                        }
-                        else{
-                            swap(nodo->data,removed->data);
-                            delete nodo;
-                            removed->left == nullptr;
-                            nodes--;
-                            return true;
-                        }
-                    }
-                    else if(nodo->left != nullptr){
-                        padre->right = nodo->left;
-                        swap(nodo->data,removed->data);
-                        delete nodo;
-                        nodes--;
-                        return true;
-                    }
-                    else{
-                        delete nodo;
-                        padre->right = nullptr;
-                        nodes--;
-                        return true;
-                    }
-
-                }
+        if (root == nullptr) {
+            return false;
+        }
+        auto *dad = root;
+        auto *removed = root;
+        while (removed->data != data) {
+            if (data > removed->data) {
+                if (removed->right != nullptr) {
+                    dad = removed;
+                    removed = removed->right;
+                } else
+                    return false;
+            } else if (data < removed->data) {
+                if (removed->left != nullptr) {
+                    dad = removed;
+                    removed = removed->left;
+                } else
+                    return false;
             }
         }
-        return false;
-    }
+        auto *it = removed;
+        if (removed == root) {
+            if (nodes == 1) {
+                root = nullptr;
+            } else if (removed->right != nullptr) {
+                if (removed->left == nullptr)
+                    root = removed->right;
+                else {
+                    dad = removed;
+                    removed = removed->left;
+                    while (removed->right != nullptr) {
+                        dad = removed;
+                        removed = removed->right;
+                    }
+                    it->data = removed->data;
+                    if (dad->right == removed){
+                        dad->right = removed->left;}
+                    else{
+                        dad->left = removed->left;}
+                }
+            } else if (removed->left){
+                root = removed->left;}
+            delete removed;
+            nodes--;
+            return true;
+        }
+        if (removed->left== nullptr) {
+            if (removed->right == nullptr) {
+                if (dad != nullptr) {
+                    if (dad->right == removed)
+                        dad->right = nullptr;
+                    else
+                        dad->left = nullptr;
+                }
+                delete removed;
+            } else {
+                if (dad->right == removed)
+                    dad->right = removed->right;
+                else
+                    dad->left = removed->right;
+                delete removed;
+            }
+        } else {
+            if ( removed->right == nullptr) {
+                if (dad->right == removed)
+                    dad->right = removed->left;
+                else
+                    dad->left = removed->left;
+                delete removed;
+            } else {
+                dad = removed;
+                removed = removed->left;
+                while (removed->right != nullptr) {
+                    dad = removed;
+                    removed = removed->right;
+                }
+                it->data = removed->data;
+                if (dad->right == removed)
+                    dad->right = removed->left;
+                else
+                    dad->left = removed->left;
+                delete removed;
+            }
+        }
+        nodes--;
+        return true;
 
+    }
     size_t size() {
         return nodes;
     }
 
     size_t height() {
-        heigth(root);
+        return heigth(root);
     }
     void traversePreOrder() {
         preOrder(root);
@@ -282,18 +256,18 @@ public:
     }
 
     Iterator<T> begin() {
-            return root;
-         }
+        return {root,true};
+    }
 
     Iterator<T> end() {
-             // TODO
-           }
+
+        return {root,false};
+    }
 
     ~BSTree() {
         destroy(root);
     }
 
-    //iterador inOrder
 };
 
 #endif
