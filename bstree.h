@@ -145,17 +145,45 @@ public:
                 root = nullptr;
                 return true;
             }
+            else if(root->data == data){
+                auto* nodo = maximoIzquierda(root->left);
+                auto *padre = find_node(nodo->data);
+                if(root->left != nodo){
+                    if(nodo->left != nullptr) {
+                     padre->right = nodo->left;
+                        swap(nodo->data,root->data);
+                        delete nodo;
+                        nodes--;
+                        return true;
+                    }
+                    else {
+                        swap(nodo->data, root->data);
+                        delete nodo;
+                        padre->right = nullptr;
+                        nodes--;
+                        return true;
+                    }
+                }
+                else{
+                    root->left = nodo->left;
+                    swap(root->data,nodo->data);
+                    delete nodo;
+                    nodes--;
+                    return true;
+                }
+
+            }
             else{
                 auto* dad = find_node(data);
                 Node<T>* removed;
                 bool left_right;
                 if(dad-> data > data){
-                     removed = dad->left;
-                     left_right = true;
+                    removed = dad->left;
+                    left_right = true;
                 }
                 else{
-                     removed = dad->right;
-                     left_right = false;
+                    removed = dad->right;
+                    left_right = false;
                 }
                 if(removed->right == nullptr && removed->left == nullptr){
                     delete removed;
@@ -196,14 +224,42 @@ public:
                     }
                 }
                 else{
-                    auto nodo = maximoIzquierda(removed->left);
-                    swap(nodo->data,removed->data);
+                    auto* nodo = maximoIzquierda(removed->left);
+                    auto* padre = find_node(nodo->data);
+                    if(removed->left == nodo){
+                        if(nodo->left != nullptr){
+                            removed->left = nodo->left;
+                            swap(nodo->data,removed->data);
+                            delete nodo;
+                            nodes--;
+                            return true;
+                        }
+                        else{
+                            swap(nodo->data,removed->data);
+                            delete nodo;
+                            removed->left == nullptr;
+                            nodes--;
+                            return true;
+                        }
+                    }
+                    else if(nodo->left != nullptr){
+                        padre->right = nodo->left;
+                        swap(nodo->data,removed->data);
+                        delete nodo;
+                        nodes--;
+                        return true;
+                    }
+                    else{
+                        delete nodo;
+                        padre->right = nullptr;
+                        nodes--;
+                        return true;
+                    }
 
-                    nodes--;
-                    return true;
                 }
             }
         }
+        return false;
     }
 
     size_t size() {
@@ -215,29 +271,29 @@ public:
     }
     void traversePreOrder() {
         preOrder(root);
-      }
+    }
 
     void traverseInOrder() {
         inOrder(root);
     }
 
     void traversePostOrder() {
-         postOrder(root);
-       }
+        postOrder(root);
+    }
 
-    //     Iterator<T> begin() {
-    //         // TODO
-    //     }
+    Iterator<T> begin() {
+            return root;
+         }
 
-    //     Iterator<T> end() {
-    //         // TODO
-     //       }
-
-     ~BSTree() {
-            destroy(root);
+    Iterator<T> end() {
+             // TODO
            }
 
-           //iterador inOrder
+    ~BSTree() {
+        destroy(root);
+    }
+
+    //iterador inOrder
 };
 
 #endif
