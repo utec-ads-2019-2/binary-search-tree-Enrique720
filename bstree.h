@@ -56,6 +56,7 @@ public:
     BSTree() : root{nullptr}, nodes{0} {};
 
     bool find(T data) {
+        // Tienes mucho código repetido entre find/insert/remove, estaría bueno sacar el código (iteraciones) repetidas
         auto *temp = root;
         if(root == nullptr){
             return false;
